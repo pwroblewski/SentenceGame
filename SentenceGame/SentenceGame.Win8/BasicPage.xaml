@@ -14,8 +14,16 @@
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">SentenseGame</x:String>
+        
+        <DataTemplate x:Key="ItemDataTemplate">
+            <StackPanel>
+                <Button Content="{Binding}" FontSize="40"/>
+            </StackPanel>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+        </ItemsPanelTemplate>
     </Page.Resources>
-   
 
 
     <Grid Style="{StaticResource LayoutRootStyle}">
@@ -35,7 +43,12 @@
         </Grid>
         <TextBlock HorizontalAlignment="Left" Margin="200,50,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Przetłumacz zdanie:" VerticalAlignment="Top" Height="39" Width="383" FontSize="25" />
         <TextBlock HorizontalAlignment="Center" Margin="200,150,200,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Sentence.Text}" VerticalAlignment="Top" Height="91" Width="983" FontSize="50" TextAlignment="Center" />
-       
+
+        <ItemsControl Margin="100,300,100,100" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="1" 
+                      ItemsSource="{Binding Translation}" 
+                      ItemsPanel="{StaticResource ItemsPanelTemplate}" 
+                      ItemTemplate="{StaticResource ItemDataTemplate}" />
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
