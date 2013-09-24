@@ -26,7 +26,8 @@ namespace SentenceGame.Portable.ViewModel
         {
             _sentenceService = sentenceService;
             Sentences = _sentenceService.GetSentences();
-            Sentence = Sentences[0];
+            Random rand = new Random();
+            Sentence = Sentences[rand.Next(0,(Sentences.Count-1))];
             var list = Sentence.Translation.Split(' ').ToList<string>();
             var list2 = list.OrderBy(a => Guid.NewGuid());
             Translation = ExtensionMethods.ToObservableCollection<string>(list2);
