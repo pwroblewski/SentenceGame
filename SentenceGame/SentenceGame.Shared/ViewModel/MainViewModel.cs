@@ -17,6 +17,7 @@ namespace SentenceGame.Portable.ViewModel
         #region Fields
 
         private readonly ISentenceService _sentenceService;
+        private int _sentenceIndex = 0;
 
         #endregion //Fields
 
@@ -26,16 +27,13 @@ namespace SentenceGame.Portable.ViewModel
         {
             _sentenceService = sentenceService;
             Sentences = _sentenceService.GetSentences();
-            Random rand = new Random();
-            Sentence = Sentences[rand.Next(0,(Sentences.Count-1))];
-            var list = Sentence.Translation.Split(' ').ToList<string>();
-            var list2 = list.OrderBy(a => Guid.NewGuid());
-            Translation = ExtensionMethods.ToObservableCollection<string>(list2);
-            GoodTranslation = ExtensionMethods.ToObservableCollection<string>(list);
-            SelTranslation = new ObservableCollection<string>();
+
+            NextSentence(_sentenceIndex);
         }
 
         #endregion //Constructor
+
+        #region Properties
 
         private List<Sentence> _sentences;
         public List<Sentence> Sentences
@@ -79,6 +77,10 @@ namespace SentenceGame.Portable.ViewModel
             set { _goodTranslation = value; RaisePropertyChanged(() => GoodTranslation); }
         }
 
+        #endregion //Properties
+
+        #region Commands
+
         private RelayCommand<string> _selectCommand;
         public RelayCommand<string> SelectCommand
         {
@@ -93,6 +95,8 @@ namespace SentenceGame.Portable.ViewModel
                             if (SelTranslation.SequenceEqual(GoodTranslation))
                             {
                                 Answer = "Correct";
+                                _sentenceIndex++;
+                                NextSentence(_sentenceIndex);
                             }
                         }));
             }
@@ -113,5 +117,25 @@ namespace SentenceGame.Portable.ViewModel
                         }));
             }
         }
+
+        #endregion //Commands
+
+        #region Methods
+
+        private void NextSentence(int sentenceIndex)
+        {
+            if (Sentences.Count > sentenceIndex)
+            {
+                Sentence = Sentences[sentenceIndex];
+                var list = Sentence.Translation.Split(' ').ToList<string>();
+                var list2 = list.OrderBy(a => Guid.NewGuid());
+                Translation = ExtensionMethods.ToObservableCollection<string>(list2);
+                GoodTranslation = ExtensionMethods.ToObservableCollection<string>(list);
+                SelTranslation = new ObservableCollection<string>();
+                Answer = "";
+            }
+        }
+
+        #endregion //Methods
     }
 }
