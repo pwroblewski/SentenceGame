@@ -1,2 +1,3 @@
 SentenceGame
-===========Simple game to learn create sentences
+===========
+Simple game, which teach you how to correctly create sentences.

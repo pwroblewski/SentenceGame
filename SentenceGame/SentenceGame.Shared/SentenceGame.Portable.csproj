@@ -33,7 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Design\SentenceDesignService.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Model\Sentence.cs" />
