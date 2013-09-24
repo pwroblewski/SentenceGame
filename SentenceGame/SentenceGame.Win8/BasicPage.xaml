@@ -1,7 +1,7 @@
 ﻿<common:LayoutAwarePage
     x:Name="pageRoot"
     x:Class="SentenceGame.Win8.BasicPage"
-    DataContext="{Binding MainViewModel, Mode=OneWay, Source={StaticResource Locator}}"
+    DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:SentenceGame.Win8"
@@ -15,9 +15,15 @@
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">SentenseGame</x:String>
         
-        <DataTemplate x:Key="ItemDataTemplate">
+        <DataTemplate x:Key="ItemDataTemplateTranslation">
             <StackPanel>
-                <Button Content="{Binding}" FontSize="40"/>
+                <Button Content="{Binding}" Command="{Binding ElementName=pageRoot, Path=DataContext.SelectCommand}" CommandParameter="{Binding}" FontSize="40"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ItemDataTemplateSelTranslation">
+            <StackPanel>
+                <Button Content="{Binding}" Command="{Binding ElementName=pageRoot, Path=DataContext.SelectRevCommand}" CommandParameter="{Binding}" FontSize="40"/>
             </StackPanel>
         </DataTemplate>
         <ItemsPanelTemplate x:Key="ItemsPanelTemplate">
@@ -43,11 +49,15 @@
         </Grid>
         <TextBlock HorizontalAlignment="Left" Margin="200,50,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Przetłumacz zdanie:" VerticalAlignment="Top" Height="39" Width="383" FontSize="25" />
         <TextBlock HorizontalAlignment="Center" Margin="200,150,200,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Sentence.Text}" VerticalAlignment="Top" Height="91" Width="983" FontSize="50" TextAlignment="Center" />
-
+        <ItemsControl Margin="100,300,100,500" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="1" 
+                      ItemsSource="{Binding SelTranslation}" 
+                      ItemsPanel="{StaticResource ItemsPanelTemplate}" 
+                      ItemTemplate="{StaticResource ItemDataTemplateSelTranslation}" />
+        <TextBlock Grid.Row="1" Text="{Binding Answer}" Margin="0,0,0,-100" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" FontSize="30"/>
         <ItemsControl Margin="100,300,100,100" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="1" 
                       ItemsSource="{Binding Translation}" 
                       ItemsPanel="{StaticResource ItemsPanelTemplate}" 
-                      ItemTemplate="{StaticResource ItemDataTemplate}" />
+                      ItemTemplate="{StaticResource ItemDataTemplateTranslation}" />
         
         <VisualStateManager.VisualStateGroups>
 

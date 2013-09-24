@@ -4,9 +4,11 @@ using SentenceGame.Portable.Model;
 using SentenceGame.Portable.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SentenceGame.Portable.Helpers;
 
 namespace SentenceGame.Portable.ViewModel
 {
@@ -25,7 +27,11 @@ namespace SentenceGame.Portable.ViewModel
             _sentenceService = sentenceService;
             Sentences = _sentenceService.GetSentences();
             Sentence = Sentences[0];
-            Translation = Sentence.Translation.Split(' ').ToList<string>();
+            var list = Sentence.Translation.Split(' ').ToList<string>();
+            var list2 = list.OrderBy(a => Guid.NewGuid());
+            Translation = ExtensionMethods.ToObservableCollection<string>(list2);
+            GoodTranslation = ExtensionMethods.ToObservableCollection<string>(list);
+            SelTranslation = new ObservableCollection<string>();
         }
 
         #endregion //Constructor
@@ -44,25 +50,67 @@ namespace SentenceGame.Portable.ViewModel
             set { _sentence = value; RaisePropertyChanged(() => Sentence); }
         }
 
-        private List<string> _translation;
-        public List<string> Translation
+        private string _answer;
+        public string Answer
+        {
+            get { return _answer; }
+            set { _answer = value; RaisePropertyChanged(() => Answer); }
+        }
+
+        private ObservableCollection<string> _translation;
+        public ObservableCollection<string> Translation
         {
             get { return _translation; }
             set { _translation = value; RaisePropertyChanged(() => Translation); }
         }
 
-        //private RelayCommand _startGame;
-        //public RelayCommand StartGame
-        //{
-        //    get
-        //    {
-        //        return _startGame
-        //            ?? (_startGame = new RelayCommand(
-        //                () =>
-        //                {
-                           
-        //                }));
-        //    }
-        //}
+        private ObservableCollection<string> _selTranslation;
+        public ObservableCollection<string> SelTranslation
+        {
+            get { return _selTranslation; }
+            set { _selTranslation = value; RaisePropertyChanged(() => SelTranslation); }
+        }
+
+        private ObservableCollection<string> _goodTranslation;
+        public ObservableCollection<string> GoodTranslation
+        {
+            get { return _goodTranslation; }
+            set { _goodTranslation = value; RaisePropertyChanged(() => GoodTranslation); }
+        }
+
+        private RelayCommand<string> _selectCommand;
+        public RelayCommand<string> SelectCommand
+        {
+            get
+            {
+                return _selectCommand
+                    ?? (_selectCommand = new RelayCommand<string>(
+                        word =>
+                        {
+                            Translation.Remove(word);
+                            SelTranslation.Add(word.ToString());
+                            if (SelTranslation.SequenceEqual(GoodTranslation))
+                            {
+                                Answer = "Correct";
+                            }
+                        }));
+            }
+        }
+
+        private RelayCommand<string> _selectRevCommand;
+        public RelayCommand<string> SelectRevCommand
+        {
+            get
+            {
+                return _selectRevCommand
+                    ?? (_selectRevCommand = new RelayCommand<string>(
+                        word =>
+                        {
+                            SelTranslation.Remove(word);
+                            Translation.Add(word.ToString());
+                            Answer = "";
+                        }));
+            }
+        }
     }
 }
