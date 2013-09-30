@@ -6,13 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SentenceGame.Portable.Helpers;
 
 namespace SentenceGame.Portable.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class GamePageViewModel : ViewModelBase
     {
         #region Fields
 
@@ -23,10 +21,10 @@ namespace SentenceGame.Portable.ViewModel
 
         #region Constructor
 
-        public MainViewModel(ISentenceService sentenceService)
+        public GamePageViewModel(ISentenceService sentenceService)
         {
             _sentenceService = sentenceService;
-            Sentences = _sentenceService.GetSentences();
+            //Sentences = _sentenceService.GetSentences();
 
             NextSentence(_sentenceIndex);
         }

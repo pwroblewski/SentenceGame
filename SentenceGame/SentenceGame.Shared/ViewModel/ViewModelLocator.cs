@@ -25,7 +25,9 @@ namespace SentenceGame.Portable.ViewModel
                 
             }
 
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<DomainViewModel>();
+            SimpleIoc.Default.Register<LessonsViewModel>();
+            SimpleIoc.Default.Register<GamePageViewModel>();
         }
 
         /// <summary>
@@ -34,11 +36,27 @@ namespace SentenceGame.Portable.ViewModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
-        public MainViewModel MainViewModel
+        public DomainViewModel DomainViewModel
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
+                return ServiceLocator.Current.GetInstance<DomainViewModel>();
+            }
+        }
+
+        public LessonsViewModel LessonsViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<LessonsViewModel>();
+            }
+        }
+
+        public GamePageViewModel GamePageViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<GamePageViewModel>();
             }
         }
 

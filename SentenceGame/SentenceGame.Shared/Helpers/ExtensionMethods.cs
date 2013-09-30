@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using GalaSoft.MvvmLight;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace SentenceGame.Portable.Helpers
 {

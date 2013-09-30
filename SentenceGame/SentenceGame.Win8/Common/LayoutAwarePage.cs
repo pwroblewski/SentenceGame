@@ -40,7 +40,7 @@ namespace SentenceGame.Win8.Common
         /// Identifies the <see cref="DefaultViewModel"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DefaultViewModelProperty =
-            DependencyProperty.Register("DefaultViewModel", typeof(IObservableMap<String, Object>),
+            DependencyProperty.Register("GamePageViewModel", typeof(IObservableMap<String, Object>),
             typeof(LayoutAwarePage), null);
 
         private List<Control> _layoutAwareControls;

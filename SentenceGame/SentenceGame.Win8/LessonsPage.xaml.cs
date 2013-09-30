@@ -12,16 +12,17 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
+// The Group Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229
 
 namespace SentenceGame.Win8
 {
     /// <summary>
-    /// A basic page that provides characteristics common to most applications.
+    /// A page that displays an overview of a single group, including a preview of the items
+    /// within the group.
     /// </summary>
-    public sealed partial class BasicPage : SentenceGame.Win8.Common.LayoutAwarePage
+    public sealed partial class LessonsPage : SentenceGame.Win8.Common.LayoutAwarePage
     {
-        public BasicPage()
+        public LessonsPage()
         {
             this.InitializeComponent();
         }
@@ -37,16 +38,8 @@ namespace SentenceGame.Win8
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
-        }
-
-        /// <summary>
-        /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
-        /// requirements of <see cref="SuspensionManager.SessionState"/>.
-        /// </summary>
-        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
-        {
+            // TODO: Assign a bindable group to this.DefaultViewModel["Group"]
+            // TODO: Assign a collection of bindable items to this.DefaultViewModel["Items"]
         }
     }
 }

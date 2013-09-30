@@ -2,6 +2,7 @@
 using SentenceGame.Portable.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,27 +11,66 @@ namespace SentenceGame.Portable.Design
 {
     public class SentenceDesignService : ISentenceService
     {
-        private List<Sentence> Sentences = new List<Sentence>();
+        private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
 
-        public List<Sentence> GetSentences()
+        public ObservableCollection<Domain> GetDomain()
         {
-            Sentences.Add(new Sentence
+            ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>();
+
+            sentences.Add(new Sentence
+                {
+                    Text = "Kot pije mleko",
+                    Translation = "The cat drinks milk"
+                });
+            sentences.Add(new Sentence
+                {
+                    Text = "Pies bawi się piłką",
+                    Translation = "Dog plays with the ball"
+                });
+            sentences.Add(new Sentence
+                {
+                    Text = "Gołąb lata po niebie",
+                    Translation = "Pigeon is flying on the sky "
+                });
+
+            ObservableCollection<Lesson> lessons = new ObservableCollection<Lesson>();
+            lessons.Add(new Lesson
+                {
+                    Title = "Poziom podstawowy",
+                    ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                    Description = "To jest lekcja na poziomie podstawowym",
+                    Sentences = sentences
+                });
+            lessons.Add(new Lesson
             {
-                Text = "Chłopiec czyta książkę",
-                Translation = "The boy reads book"
+                Title = "Poziom średniozaawansowany",
+                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                Description = "To jest lekcja na poziomie średniozaawansowanym"
             });
-            Sentences.Add(new Sentence
+            lessons.Add(new Lesson
             {
-                Text = "Dziewczynka jeździ na rowerze",
-                Translation = "The girl rides a bike"
-            });
-            Sentences.Add(new Sentence
-            {
-                Text = "Mam na imię Piotrek",
-                Translation = "My name is Peter"
+                Title = "Poziom zaawansowany",
+                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                Description = "To jest lekcja na poziomie zaawansowanym"
             });
 
-            return Sentences;
+            Domain domain = new Domain
+            {
+                Title = "Zwierzęta",
+                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                Description = "Lekcje do nauki układania zdań ze zwięrzętami",
+                Lessons = lessons
+            };
+
+            domains.Add(domain);
+            domains.Add(domain);
+
+            return domains;
+        }
+        public ObservableCollection<Lesson> GetLessons(Domain domain)
+        {
+            var dom = domains.Single(x => x.Title.Equals(domain.Title));
+            return dom.Lessons;
         }
     }
 }

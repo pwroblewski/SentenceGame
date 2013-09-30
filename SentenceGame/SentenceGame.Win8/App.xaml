@@ -7,12 +7,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:ignore="http://www.ignore.com"
     mc:Ignorable="d ignore"
+    xmlns:helpers="using:SentenceGame.Win8.Helpers"
     xmlns:vm="using:SentenceGame.Portable.ViewModel"
     >
 
     <Application.Resources>
         <ResourceDictionary>
-
+            <helpers:IocSetup x:Key="IocSetup" />
             <vm:ViewModelLocator x:Key="Locator"
                                  d:IsDataSource="True" />
             
