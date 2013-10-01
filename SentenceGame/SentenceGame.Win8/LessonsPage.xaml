@@ -18,8 +18,9 @@
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource
             x:Name="itemsViewSource"
-            Source="{Binding Lessons}">
-          </CollectionViewSource>
+            Source="{Binding Lessons}"
+            d:Source="{Binding Lessons, Source={d:DesignInstance Type=data:DesignViewModel, IsDesignTimeCreatable=True}}">
+        </CollectionViewSource>
     </Page.Resources>
 
     <!--
@@ -27,7 +28,7 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid DataContext="{Binding Domians}" Style="{StaticResource LayoutRootStyle}">
+    <Grid Style="{StaticResource LayoutRootStyle}" DataContext="{Binding DomainProp}">
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
@@ -48,8 +49,7 @@
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">
-                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
-                    <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                    <Image Source="{Binding ImagePath}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                     <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
                 </StackPanel>
             </GridView.Header>

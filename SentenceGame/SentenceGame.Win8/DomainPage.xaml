@@ -64,7 +64,8 @@
                             <Grid Margin="1,0,0,6">
                                 <Button
                                     AutomationProperties.Name="Group Title"
-                                    Command="{Binding DomainViewModel.NavigateToLessonsCommand, Source={StaticResource Locator}}"
+                                    Command="{Binding DomainViewModel.NavigateToGameCommand, Source={StaticResource Locator}}"
+                                    CommandParameter="{Binding Title}"
                                     Style="{StaticResource TextPrimaryButtonStyle}" >
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
@@ -95,7 +96,8 @@
             ItemTemplate="{StaticResource Standard80ItemTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
-            IsItemClickEnabled="True">
+            IsItemClickEnabled="True"
+            >
 
             <ListView.GroupStyle>
                 <GroupStyle>
@@ -104,7 +106,7 @@
                             <Grid Margin="7,7,0,0">
                                 <Button
                                     AutomationProperties.Name="Group Title"
-                                    Command="{Binding}"
+                                    Command="{Binding DomainViewModel.NavigateToGameCommand, Source={StaticResource Locator}}"
                                     Style="{StaticResource TextPrimaryButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />

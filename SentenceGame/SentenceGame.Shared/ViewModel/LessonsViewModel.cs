@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using SentenceGame.Portable.Helpers;
 using SentenceGame.Portable.Model;
 using SentenceGame.Portable.Services;
@@ -16,21 +17,29 @@ namespace SentenceGame.Portable.ViewModel
          #region Fields
 
         private readonly ISentenceService _sentenceService;
-        private int _sentenceIndex = 0;
+        private readonly INavigationService _navigationService;
 
         #endregion //Fields
         #region Constructor
 
-        public LessonsViewModel(ISentenceService sentenceService)
+        public LessonsViewModel(ISentenceService sentenceService, INavigationService navigationService)
         {
             _sentenceService = sentenceService;
-            //Lessons = _sentenceService.GetLessons(domain);
-            //NextSentence(_sentenceIndex);
+            _navigationService = navigationService;
+
+            Messenger.Default.Register<string>(this, LoadData);
         }
 
         #endregion //Constructor
 
         #region Properties
+
+        private Domain _domain;
+        public Domain DomainProp
+        {
+            get { return _domain; }
+            set { _domain = value; RaisePropertyChanged(() => DomainProp); }
+        }
 
         private ObservableCollection<Lesson> _lessons;
         public ObservableCollection<Lesson> Lessons
@@ -40,5 +49,11 @@ namespace SentenceGame.Portable.ViewModel
         }
 
         #endregion //Properties
+
+        private async void LoadData(string title)
+        {
+            DomainProp = await _sentenceService.GetDomain(title);
+            Lessons = DomainProp.Lessons;
+        }
     }
 }

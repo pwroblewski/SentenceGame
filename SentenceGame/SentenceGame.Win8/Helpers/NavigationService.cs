@@ -90,6 +90,9 @@ namespace SentenceGame.Win8.Helpers
                 case "LessonsPage":
                     Navigate(typeof(LessonsPage), parameter);
                     break;
+                case "GamePage":
+                    Navigate(typeof(GamePage), parameter);
+                    break;
             }
         }
     }

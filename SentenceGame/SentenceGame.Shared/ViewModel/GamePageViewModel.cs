@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using SentenceGame.Portable.Helpers;
+using System.Threading.Tasks;
 
 namespace SentenceGame.Portable.ViewModel
 {
@@ -15,26 +16,29 @@ namespace SentenceGame.Portable.ViewModel
         #region Fields
 
         private readonly ISentenceService _sentenceService;
+        private readonly INavigationService _navigationService;
+
         private int _sentenceIndex = 0;
 
         #endregion //Fields
 
         #region Constructor
 
-        public GamePageViewModel(ISentenceService sentenceService)
+        public GamePageViewModel(ISentenceService sentenceService, INavigationService navigationService)
         {
             _sentenceService = sentenceService;
-            //Sentences = _sentenceService.GetSentences();
+            _navigationService = navigationService;
 
-            NextSentence(_sentenceIndex);
+            LoadData();
+           
         }
 
         #endregion //Constructor
 
         #region Properties
 
-        private List<Sentence> _sentences;
-        public List<Sentence> Sentences
+        private ObservableCollection<Sentence> _sentences;
+        public ObservableCollection<Sentence> Sentences
         {
             get { return _sentences; }
             set { _sentences = value; RaisePropertyChanged(() => Sentences); }
@@ -132,6 +136,13 @@ namespace SentenceGame.Portable.ViewModel
                 SelTranslation = new ObservableCollection<string>();
                 Answer = "";
             }
+        }
+
+        private async Task LoadData()
+        {
+            var lesson = await _sentenceService.GetLesson("", "");
+            Sentences = lesson.Sentences;
+            NextSentence(_sentenceIndex);
         }
 
         #endregion //Methods

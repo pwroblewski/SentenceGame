@@ -13,48 +13,49 @@ namespace SentenceGame.Portable.Design
     {
         private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
 
-        public ObservableCollection<Domain> GetDomain()
+        public async Task<ObservableCollection<Domain>> GetDomains()
         {
-            ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>();
-
-            sentences.Add(new Sentence
+            ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>()
+            {
+                new Sentence
                 {
                     Text = "Kot pije mleko",
                     Translation = "The cat drinks milk"
-                });
-            sentences.Add(new Sentence
+                },
+                new Sentence
                 {
                     Text = "Pies bawi się piłką",
                     Translation = "Dog plays with the ball"
-                });
-            sentences.Add(new Sentence
+                },
+                new Sentence
                 {
                     Text = "Gołąb lata po niebie",
                     Translation = "Pigeon is flying on the sky "
-                });
+            }};
 
-            ObservableCollection<Lesson> lessons = new ObservableCollection<Lesson>();
-            lessons.Add(new Lesson
+            ObservableCollection<Lesson> lessons = new ObservableCollection<Lesson>()
+            {
+                new Lesson
                 {
                     Title = "Poziom podstawowy",
                     ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
                     Description = "To jest lekcja na poziomie podstawowym",
                     Sentences = sentences
-                });
-            lessons.Add(new Lesson
-            {
-                Title = "Poziom średniozaawansowany",
-                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "To jest lekcja na poziomie średniozaawansowanym"
-            });
-            lessons.Add(new Lesson
-            {
-                Title = "Poziom zaawansowany",
-                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "To jest lekcja na poziomie zaawansowanym"
-            });
+                }, 
+                new Lesson
+                {
+                    Title = "Poziom średniozaawansowany",
+                    ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                    Description = "To jest lekcja na poziomie średniozaawansowanym"
+                },
+                new Lesson
+                {
+                    Title = "Poziom zaawansowany",
+                    ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                    Description = "To jest lekcja na poziomie zaawansowanym"
+            }};
 
-            Domain domain = new Domain
+            Domain domZw = new Domain
             {
                 Title = "Zwierzęta",
                 ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
@@ -62,15 +63,29 @@ namespace SentenceGame.Portable.Design
                 Lessons = lessons
             };
 
-            domains.Add(domain);
-            domains.Add(domain);
+            Domain domR = new Domain
+            {
+                Title = "Rośliny",
+                ImagePath = "ms-appx:///SentenseGame.Portable/Images/Zwierzeta/Zwierzeta.jpg",
+                Description = "Lekcje do nauki układania zdań z roślinami",
+                Lessons = lessons
+            };
 
-            return domains;
+            domains.Add(domZw);
+            domains.Add(domR);
+
+            return await Task.FromResult(domains);
         }
-        public ObservableCollection<Lesson> GetLessons(Domain domain)
+        public async Task<Domain> GetDomain(string title)
         {
-            var dom = domains.Single(x => x.Title.Equals(domain.Title));
-            return dom.Lessons;
+            domains = await GetDomains();
+            return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
+        }
+
+        public async Task<Lesson> GetLesson(string dTitle, string lTitle)
+        {
+            Domain dom = await GetDomain("Zwierzęta");
+            return await Task.FromResult(dom.Lessons[0]);
         }
     }
 }

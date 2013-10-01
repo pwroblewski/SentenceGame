@@ -28,8 +28,7 @@ namespace SentenceGame.Portable.ViewModel
             if (IsInDesignMode)
             {
                 _sentenceService = new SentenceDesignService();
-                Domains = ExtensionMethods.ToObservableCollection<Domain>(_sentenceService.GetDomain());
-                //Lessons = _sentenceService.GetLessons();
+                LoadData();
             }
         }
 
@@ -53,6 +52,10 @@ namespace SentenceGame.Portable.ViewModel
 
         #endregion //Properties
 
- 
+        private async Task LoadData()
+        {
+            Domains = ExtensionMethods.ToObservableCollection<Domain>(await _sentenceService.GetDomains());
+            Lessons = Domains[0].Lessons;
+        }
     }
 }
