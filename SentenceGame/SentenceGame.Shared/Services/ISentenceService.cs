@@ -12,6 +12,5 @@ namespace SentenceGame.Portable.Services
     {
         Task<ObservableCollection<Domain>> GetDomains();
         Task<Domain> GetDomain(string title);
-        Task<Lesson> GetLesson(string dTitle, string lTitle);
     }
 }

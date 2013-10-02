@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using SentenceGame.Portable.Helpers;
 using SentenceGame.Portable.Model;
@@ -14,12 +15,13 @@ namespace SentenceGame.Portable.ViewModel
 {
     public class LessonsViewModel : ViewModelBase
     {
-         #region Fields
+        #region Fields
 
         private readonly ISentenceService _sentenceService;
         private readonly INavigationService _navigationService;
 
         #endregion //Fields
+
         #region Constructor
 
         public LessonsViewModel(ISentenceService sentenceService, INavigationService navigationService)
@@ -49,6 +51,25 @@ namespace SentenceGame.Portable.ViewModel
         }
 
         #endregion //Properties
+
+        #region Commands
+
+        private RelayCommand<Lesson> _navigateToGameCommand;
+        public RelayCommand<Lesson> NavigateToGameCommand
+        {
+            get
+            {
+                return _navigateToGameCommand
+                    ?? (_navigateToGameCommand = new RelayCommand<Lesson>(
+                        lesson =>
+                        {
+                            _navigationService.Navigate("GamePage");
+                            Messenger.Default.Send<Lesson, GamePageViewModel>(lesson);
+                        }));
+            }
+        }
+
+    #endregion //Commands
 
         private async void LoadData(string title)
         {

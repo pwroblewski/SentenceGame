@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:data="using:SentenceGame.Portable.ViewModel"
+    xmlns:helpers="using:SentenceGame.Win8.Helpers"
     DataContext="{Binding DomainViewModel, Mode=TwoWay, Source={StaticResource Locator}}"
     >
 
@@ -51,6 +52,7 @@
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
+            helpers:ItemClickCommand.Command="{Binding DomainViewModel.NavigateToGameCommand, Source={StaticResource Locator}}"
             >
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -64,7 +66,7 @@
                             <Grid Margin="1,0,0,6">
                                 <Button
                                     AutomationProperties.Name="Group Title"
-                                    Command="{Binding DomainViewModel.NavigateToGameCommand, Source={StaticResource Locator}}"
+                                    Command="{Binding DomainViewModel.NavigateToLessonsCommand, Source={StaticResource Locator}}"
                                     CommandParameter="{Binding Title}"
                                     Style="{StaticResource TextPrimaryButtonStyle}" >
                                     <StackPanel Orientation="Horizontal">

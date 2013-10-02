@@ -62,17 +62,17 @@ namespace SentenceGame.Portable.ViewModel
             }
         }
 
-        private RelayCommand<string> _navigateToGameCommand;
-        public RelayCommand<string> NavigateToGameCommand
+        private RelayCommand<Lesson> _navigateToGameCommand;
+        public RelayCommand<Lesson> NavigateToGameCommand
         {
             get
             {
                 return _navigateToGameCommand
-                    ?? (_navigateToGameCommand = new RelayCommand<string>(
-                        title =>
+                    ?? (_navigateToGameCommand = new RelayCommand<Lesson>(
+                        lesson =>
                         {
                             _navigationService.Navigate("GamePage");
-                            Messenger.Default.Send<string, GamePageViewModel>(title);
+                            Messenger.Default.Send<Lesson, GamePageViewModel>(lesson);
                         }));
             }
         }

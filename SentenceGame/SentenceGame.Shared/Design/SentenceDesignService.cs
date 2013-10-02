@@ -81,11 +81,5 @@ namespace SentenceGame.Portable.Design
             domains = await GetDomains();
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
         }
-
-        public async Task<Lesson> GetLesson(string dTitle, string lTitle)
-        {
-            Domain dom = await GetDomain("Zwierzęta");
-            return await Task.FromResult(dom.Lessons[0]);
-        }
     }
 }

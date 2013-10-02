@@ -17,7 +17,6 @@ namespace SentenceGame.Portable.ViewModel
         #region Fields
 
         private readonly ISentenceService _sentenceService;
-        private int _sentenceIndex = 0;
 
         #endregion //Fields
 

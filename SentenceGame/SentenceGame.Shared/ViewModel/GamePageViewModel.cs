@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using SentenceGame.Portable.Helpers;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace SentenceGame.Portable.ViewModel
 {
@@ -29,8 +30,7 @@ namespace SentenceGame.Portable.ViewModel
             _sentenceService = sentenceService;
             _navigationService = navigationService;
 
-            LoadData();
-           
+            Messenger.Default.Register<Lesson>(this, LoadData);
         }
 
         #endregion //Constructor
@@ -124,7 +124,13 @@ namespace SentenceGame.Portable.ViewModel
 
         #region Methods
 
-        private void NextSentence(int sentenceIndex)
+        private async void LoadData(Lesson lesson)
+        {
+            Sentences = lesson.Sentences;
+            NextSentence(_sentenceIndex);
+        }
+
+        private async void NextSentence(int sentenceIndex)
         {
             if (Sentences.Count > sentenceIndex)
             {
@@ -136,13 +142,6 @@ namespace SentenceGame.Portable.ViewModel
                 SelTranslation = new ObservableCollection<string>();
                 Answer = "";
             }
-        }
-
-        private async Task LoadData()
-        {
-            var lesson = await _sentenceService.GetLesson("", "");
-            Sentences = lesson.Sentences;
-            NextSentence(_sentenceIndex);
         }
 
         #endregion //Methods

@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:data="using:SentenceGame.Portable.ViewModel"
+    xmlns:helpers="using:SentenceGame.Win8.Helpers"
     DataContext="{Binding LessonsViewModel, Mode=TwoWay, Source={StaticResource Locator}}"
     >
 
@@ -45,7 +46,10 @@
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
             ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
             SelectionMode="None"
-            IsSwipeEnabled="false">
+            IsSwipeEnabled="false"
+            IsItemClickEnabled="True"
+            helpers:ItemClickCommand.Command="{Binding LessonsViewModel.NavigateToGameCommand, Source={StaticResource Locator}}"
+            >
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">

@@ -40,19 +40,36 @@ namespace SentenceGame.Win8.Service
                     Title = "Poziom podstawowy",
                     ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
                     Description = "To jest lekcja na poziomie podstawowym",
-                    Sentences = sentences
-                }, 
+                    Sentences = new ObservableCollection<Sentence>{
+                        new Sentence
+                        {
+                            Text = "To jest zdanie 1",
+                            Translation = "This is sentence 1"
+                        },
+                        new Sentence
+                        {
+                            Text = "To jest zdanie 2",
+                            Translation = "This is sentence 2"
+                        },
+                        new Sentence
+                        {
+                            Text = "To jest zdanie 3",
+                            Translation = "This is sentence 3"
+                        }
+                }}, 
                 new Lesson
                 {
                     Title = "Poziom średniozaawansowany",
                     ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie średniozaawansowanym"
+                    Description = "To jest lekcja na poziomie średniozaawansowanym",
+                    Sentences = sentences
                 },
                 new Lesson
                 {
                     Title = "Poziom zaawansowany",
                     ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie zaawansowanym"
+                    Description = "To jest lekcja na poziomie zaawansowanym",
+                    Sentences = sentences
             }};
 
             Domain domZw = new Domain
@@ -76,15 +93,10 @@ namespace SentenceGame.Win8.Service
 
             return await Task.FromResult(domains);
         }
+
         public async Task<Domain> GetDomain(string title)
         {
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
-        }
-
-        public async Task<Lesson> GetLesson(string dTitle, string lTitle)
-        {
-            Domain dom = await GetDomain("Zwierzęta");
-            return await Task.FromResult(dom.Lessons[0]);
         }
     }
 }

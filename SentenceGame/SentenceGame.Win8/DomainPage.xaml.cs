@@ -48,10 +48,5 @@ namespace SentenceGame.Win8
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
-
-        private void itemListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
     }
 }
