@@ -126,8 +126,8 @@ namespace SentenceGame.Portable.ViewModel
 
         private async void LoadData(Lesson lesson)
         {
-            Sentences = lesson.Sentences;
-            NextSentence(_sentenceIndex);
+            //Sentences = lesson.Sentences;
+           // NextSentence(_sentenceIndex);
         }
 
         private async void NextSentence(int sentenceIndex)

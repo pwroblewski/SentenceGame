@@ -12,7 +12,7 @@ namespace SentenceGame.Portable.Model
         public string Title { get; set; }
         public string ImagePath { get; set; }
         public string Description { get; set; }
-        public ObservableCollection<Lesson> Lessons { get; set; }
+        public IList<Lesson> Lessons { get; set; }
 
         public Domain()
         { }

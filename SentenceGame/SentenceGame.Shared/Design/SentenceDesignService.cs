@@ -11,9 +11,9 @@ namespace SentenceGame.Portable.Design
 {
     public class SentenceDesignService : ISentenceService
     {
-        private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
+        private IList<Domain> domains = new ObservableCollection<Domain>();
 
-        public async Task<ObservableCollection<Domain>> GetDomains()
+        public async Task<IList<Domain>> GetDomains()
         {
             ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>()
             {

@@ -6,90 +6,90 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Windows.Storage;
 
 namespace SentenceGame.Win8.Service
 {
     public class SentenceService : ISentenceService
     {
+        private const string XmlExt = ".xml";
         private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
 
-        public async Task<ObservableCollection<Domain>> GetDomains()
+        public async Task<IList<Domain>> GetDomains()
         {
-            ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>()
+            try
             {
-                new Sentence
-                {
-                    Text = "Kot pije mleko",
-                    Translation = "The cat drinks milk"
-                },
-                new Sentence
-                {
-                    Text = "Pies bawi się piłką",
-                    Translation = "Dog plays with the ball"
-                },
-                new Sentence
-                {
-                    Text = "Gołąb lata po niebie",
-                    Translation = "Pigeon is flying on the sky "
-            }};
 
-            ObservableCollection<Lesson> lessons = new ObservableCollection<Lesson>()
+                StorageFolder sf = await ApplicationData.Current.LocalFolder.GetFolderAsync("Data");
+                IReadOnlyList<StorageFolder> sf2 = await sf.GetFoldersAsync();
+
+                foreach (StorageFolder folder in sf2)
+                {
+                    // czytanie lekcji
+                    IList<Lesson> lessonsList = new List<Lesson>();
+
+                    IReadOnlyList<StorageFile> allFiles = await folder.GetFilesAsync();
+                    var lessonsFiles = allFiles.Where(x => x.DisplayName.Contains("Lesson"));
+
+                    foreach (StorageFile file in lessonsFiles)
+                    {
+                        var xmlStream = await FileIO.ReadTextAsync(file);
+
+                        XDocument doc = XDocument.Parse(xmlStream);
+
+                        var data = from query in doc.Descendants("Lesson")
+                                   select new Lesson
+                                   {
+                                       Title = query.Element("Title").ToString(),
+                                       Description = query.Element("Description").ToString(),
+                                       ImagePath = query.Element("ImagePath").ToString()
+                                   };
+                        lessonsList.Add((Lesson)data);
+                    }
+
+                    // czytanie pliku kategorii
+                    string fileName = folder.Name + XmlExt;
+
+                    StorageFile cat = await folder.GetFileAsync(fileName);
+
+                    var xmlStream2 = await FileIO.ReadTextAsync(cat);
+
+                    XDocument doc2 = XDocument.Parse(xmlStream2);
+
+                    var data2 = from query in doc2.Descendants("Category")
+                                select new Domain
+                                {
+                                    Title = query.Element("Title").ToString(),
+                                    Description = query.Element("Description").ToString(),
+                                    ImagePath = query.Element("ImagePath").ToString(),
+                                    Lessons = lessonsList
+                                };
+
+                    // czytanie
+
+                    domains.Add((Domain)data2);
+                }
+            }
+            catch (Exception ex)
             {
-                new Lesson
-                {
-                    Title = "Poziom podstawowy",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie podstawowym",
-                    Sentences = new ObservableCollection<Sentence>{
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 1",
-                            Translation = "This is sentence 1"
-                        },
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 2",
-                            Translation = "This is sentence 2"
-                        },
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 3",
-                            Translation = "This is sentence 3"
-                        }
-                }}, 
-                new Lesson
-                {
-                    Title = "Poziom średniozaawansowany",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie średniozaawansowanym",
-                    Sentences = sentences
-                },
-                new Lesson
-                {
-                    Title = "Poziom zaawansowany",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie zaawansowanym",
-                    Sentences = sentences
-            }};
 
-            Domain domZw = new Domain
-            {
-                Title = "Zwierzęta",
-                ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "Lekcje do nauki układania zdań ze zwięrzętami",
-                Lessons = lessons
-            };
+            }
+            //StorageFolder sfq = await sf.GetFolderAsync("Questionss");
+            //StorageFile st = await sfq.GetFileAsync(FileName);
 
-            Domain domR = new Domain
-            {
-                Title = "Rośliny",
-                ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "Lekcje do nauki układania zdań z roślinami",
-                Lessons = lessons
-            };
+            //var xmlStream = await FileIO.ReadTextAsync(st);
 
-            domains.Add(domZw);
-            domains.Add(domR);
+            //XDocument doc = XDocument.Parse(xmlStream);
+
+            //var data = from query in doc.Descendants("question")
+            //           select new Question
+            //           {
+            //               Id = (int)query.Element("id"),
+            //               Text = (string)query.Element("text"),
+            //               AnswerCorrect = (int)query.Element("answearcorrect"),
+            //               AnswerIncorrect = (int)query.Element("answearincorrect")
+            //           };
 
             return await Task.FromResult(domains);
         }

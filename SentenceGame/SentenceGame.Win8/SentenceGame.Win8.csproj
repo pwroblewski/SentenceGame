@@ -137,7 +137,30 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />
-    <Content Include="Images\Zwierzeta\Zwierzeta.jpg" />
+    <Content Include="Data\Category1\Category1.xml" />
+    <Content Include="Data\Category1\Images\Category1.jpg" />
+    <Content Include="Data\Category1\Images\Lesson1.jpg" />
+    <Content Include="Data\Category1\Images\Lesson2.jpg" />
+    <Content Include="Data\Category1\Images\Lesson3.jpg" />
+    <Content Include="Data\Category1\Lesson1.xml" />
+    <Content Include="Data\Category1\Lesson2.xml" />
+    <Content Include="Data\Category1\Lesson3.xml" />
+    <Content Include="Data\Category2\Category2.xml" />
+    <Content Include="Data\Category2\Images\Category2.jpg" />
+    <Content Include="Data\Category2\Images\Lesson1.jpg" />
+    <Content Include="Data\Category2\Images\Lesson2.jpg" />
+    <Content Include="Data\Category2\Images\Lesson3.jpg" />
+    <Content Include="Data\Category2\Lesson1.xml" />
+    <Content Include="Data\Category2\Lesson2.xml" />
+    <Content Include="Data\Category2\Lesson3.xml" />
+    <Content Include="Data\Category3\Category3.xml" />
+    <Content Include="Data\Category3\Images\Category3.jpg" />
+    <Content Include="Data\Category3\Images\Lesson1.jpg" />
+    <Content Include="Data\Category3\Images\Lesson2.jpg" />
+    <Content Include="Data\Category3\Images\Lesson3.jpg" />
+    <Content Include="Data\Category3\Lesson1.xml" />
+    <Content Include="Data\Category3\Lesson2.xml" />
+    <Content Include="Data\Category3\Lesson3.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -184,6 +207,7 @@
       <Name>SentenceGame.Portable</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

@@ -74,7 +74,7 @@ namespace SentenceGame.Portable.ViewModel
         private async void LoadData(string title)
         {
             DomainProp = await _sentenceService.GetDomain(title);
-            Lessons = DomainProp.Lessons;
+            Lessons = ExtensionMethods.ToObservableCollection<Lesson>(DomainProp.Lessons);
         }
     }
 }
