@@ -13,15 +13,19 @@ namespace SentenceGame.Win8.Service
 {
     public class SentenceService : ISentenceService
     {
+        IList<Domain> domains = new List<Domain>();
+
         private const string XmlExt = ".xml";
-        private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
+        private const string imgUri = "ms-appx:///Data/";
 
         public async Task<IList<Domain>> GetDomains()
         {
+            //IList<Domain> domains = new List<Domain>();
+
             try
             {
+                var sf = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Data");
 
-                StorageFolder sf = await ApplicationData.Current.LocalFolder.GetFolderAsync("Data");
                 IReadOnlyList<StorageFolder> sf2 = await sf.GetFoldersAsync();
 
                 foreach (StorageFolder folder in sf2)
@@ -38,14 +42,15 @@ namespace SentenceGame.Win8.Service
 
                         XDocument doc = XDocument.Parse(xmlStream);
 
-                        var data = from query in doc.Descendants("Lesson")
-                                   select new Lesson
-                                   {
-                                       Title = query.Element("Title").ToString(),
-                                       Description = query.Element("Description").ToString(),
-                                       ImagePath = query.Element("ImagePath").ToString()
-                                   };
-                        lessonsList.Add((Lesson)data);
+                        var data = (from query in doc.Descendants("Lesson")
+                                    select new Lesson
+                                    {
+                                        Title = (string)query.Element("Title"),
+                                        Description = (string)query.Element("Description"),
+                                        ImagePath = imgUri + (string)query.Element("ImagePath"),
+                                        LessonPath = folder.Name + "/" + file.Name
+                                    }).First<Lesson>();
+                        lessonsList.Add(data);
                     }
 
                     // czytanie pliku kategorii
@@ -57,46 +62,57 @@ namespace SentenceGame.Win8.Service
 
                     XDocument doc2 = XDocument.Parse(xmlStream2);
 
-                    var data2 = from query in doc2.Descendants("Category")
-                                select new Domain
-                                {
-                                    Title = query.Element("Title").ToString(),
-                                    Description = query.Element("Description").ToString(),
-                                    ImagePath = query.Element("ImagePath").ToString(),
-                                    Lessons = lessonsList
-                                };
+                    var data2 = (from query in doc2.Descendants("Category")
+                                 select new Domain
+                                 {
+                                     Title = (string)query.Element("Title"),
+                                     Description = (string)query.Element("Description"),
+                                     ImagePath = imgUri + (string)query.Element("ImagePath"),
+                                     Lessons = lessonsList
+                                 }).First<Domain>();
 
                     // czytanie
 
-                    domains.Add((Domain)data2);
+                    domains.Add(data2);
                 }
             }
             catch (Exception ex)
             {
 
             }
-            //StorageFolder sfq = await sf.GetFolderAsync("Questionss");
-            //StorageFile st = await sfq.GetFileAsync(FileName);
-
-            //var xmlStream = await FileIO.ReadTextAsync(st);
-
-            //XDocument doc = XDocument.Parse(xmlStream);
-
-            //var data = from query in doc.Descendants("question")
-            //           select new Question
-            //           {
-            //               Id = (int)query.Element("id"),
-            //               Text = (string)query.Element("text"),
-            //               AnswerCorrect = (int)query.Element("answearcorrect"),
-            //               AnswerIncorrect = (int)query.Element("answearincorrect")
-            //           };
 
             return await Task.FromResult(domains);
         }
 
         public async Task<Domain> GetDomain(string title)
         {
+            //IList<Domain> domains = await GetDomains();
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
+        }
+
+        public async Task<IList<Sentence>> GetSentences(string lessonPath)
+        {
+            string categoryFolder = lessonPath.Split('/')[0];
+            string lessonFile = lessonPath.Split('/')[1];
+
+            StorageFolder folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Data");
+            StorageFolder folder2 = await folder.GetFolderAsync(categoryFolder);
+            StorageFile file = await folder2.GetFileAsync(lessonFile);
+
+            var xmlStream = await FileIO.ReadTextAsync(file);
+
+            XDocument doc = XDocument.Parse(xmlStream);
+
+
+            var data = from query in doc.Descendants("Sentence")
+                       select new Sentence
+                       {
+                           Text = (string)query.Element("Text"),
+                           Translation = (string)query.Element("Translation"),
+                           ImagePath = ""
+                       };
+
+            return await Task.FromResult((IList<Sentence>)data.ToList());
         }
     }
 }

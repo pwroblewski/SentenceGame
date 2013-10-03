@@ -2,5 +2,5 @@
 <Category>
   <Title>Category 2</Title>
   <Description>This is category-2 data</Description>
-  <ImagePath>ms-appx:///Category2/Images/Category2.jpg</ImagePath>
+  <ImagePath>Category2/Images/Category2.jpg</ImagePath>
 </Category>

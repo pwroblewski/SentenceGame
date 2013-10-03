@@ -14,6 +14,8 @@ namespace SentenceGame.Portable.Model
         public string Description { get; set; }
         public IList<Sentence> Sentences { get; set; }
 
+        public string LessonPath { get; set; }
+
         public Lesson()
         { }
     }

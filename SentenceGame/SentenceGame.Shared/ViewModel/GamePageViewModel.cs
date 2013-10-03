@@ -30,7 +30,7 @@ namespace SentenceGame.Portable.ViewModel
             _sentenceService = sentenceService;
             _navigationService = navigationService;
 
-            Messenger.Default.Register<Lesson>(this, LoadData);
+            Messenger.Default.Register<string>(this, LoadData);
         }
 
         #endregion //Constructor
@@ -124,13 +124,14 @@ namespace SentenceGame.Portable.ViewModel
 
         #region Methods
 
-        private async void LoadData(Lesson lesson)
+        private async void LoadData(string lessonPath)
         {
-            //Sentences = lesson.Sentences;
-           // NextSentence(_sentenceIndex);
+            var sentences = await _sentenceService.GetSentences(lessonPath);
+            Sentences = ExtensionMethods.ToObservableCollection<Sentence>(sentences);
+            await NextSentence(_sentenceIndex);
         }
 
-        private async void NextSentence(int sentenceIndex)
+        private async Task NextSentence(int sentenceIndex)
         {
             if (Sentences.Count > sentenceIndex)
             {

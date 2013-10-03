@@ -2,7 +2,7 @@
 <Lesson>
   <Title>Lesson 2</Title>
   <Description>This is lesson-2 data</Description>
-  <ImagePath>ms-appx:///Category1/Images/Lesson2.jpg</ImagePath>
+  <ImagePath>Category1/Images/Lesson2.jpg</ImagePath>
   <Sentences>
     <Sentence>
       <Text>To jest przykładowe zdanie nr 1 z lekcji 2</Text>

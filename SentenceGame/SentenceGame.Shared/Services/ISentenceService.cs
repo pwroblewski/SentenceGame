@@ -12,5 +12,6 @@ namespace SentenceGame.Portable.Services
     {
         Task<IList<Domain>> GetDomains();
         Task<Domain> GetDomain(string title);
+        Task<IList<Sentence>> GetSentences(string lessonPath);
     }
 }

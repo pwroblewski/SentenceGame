@@ -64,7 +64,7 @@ namespace SentenceGame.Portable.ViewModel
                         lesson =>
                         {
                             _navigationService.Navigate("GamePage");
-                            Messenger.Default.Send<Lesson, GamePageViewModel>(lesson);
+                            Messenger.Default.Send<string, GamePageViewModel>(lesson.LessonPath);
                         }));
             }
         }

@@ -81,5 +81,10 @@ namespace SentenceGame.Portable.Design
             domains = await GetDomains();
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
         }
+
+        public Task<IList<Sentence>> GetSentences(string lessonPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
