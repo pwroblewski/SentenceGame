@@ -9,6 +9,7 @@ using System.Linq;
 using SentenceGame.Portable.Helpers;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Practices.ServiceLocation;
 
 namespace SentenceGame.Portable.ViewModel
 {
@@ -94,12 +95,6 @@ namespace SentenceGame.Portable.ViewModel
                         {
                             Translation.Remove(word);
                             SelTranslation.Add(word.ToString());
-                            if (SelTranslation.SequenceEqual(GoodTranslation))
-                            {
-                                Answer = "Correct";
-                                _sentenceIndex++;
-                                NextSentence(_sentenceIndex);
-                            }
                         }));
             }
         }
@@ -120,6 +115,29 @@ namespace SentenceGame.Portable.ViewModel
             }
         }
 
+        private RelayCommand<string> _checkAnswerCommand;
+        public RelayCommand<string> CheckAnswerCommand
+        {
+            get
+            {
+                return _checkAnswerCommand
+                    ?? (_checkAnswerCommand = new RelayCommand<string>(
+                        async word =>
+                        {
+                            if (SelTranslation.SequenceEqual(GoodTranslation))
+                            {
+                                await DialogService.ShowMessage("", "Correct!");
+                                await NextSentence(++_sentenceIndex, true);
+                            }
+                            else
+                            {
+                                await DialogService.ShowWrongAnswerMessage(GoodTranslation, "Incorrect!");
+                                await NextSentence(++_sentenceIndex, false);
+                            }
+                        }));
+            }
+        }
+
         #endregion //Commands
 
         #region Methods
@@ -128,11 +146,18 @@ namespace SentenceGame.Portable.ViewModel
         {
             var sentences = await _sentenceService.GetSentences(lessonPath);
             Sentences = ExtensionMethods.ToObservableCollection<Sentence>(sentences);
-            await NextSentence(_sentenceIndex);
+
+            _sentenceIndex = 0;
+            await NextSentence(_sentenceIndex, true);
         }
 
-        private async Task NextSentence(int sentenceIndex)
+        private async Task NextSentence(int sentenceIndex, bool answer)
         {
+            if (!answer)
+            {
+                Sentences.Add(Sentences[sentenceIndex - 1]);
+            }
+
             if (Sentences.Count > sentenceIndex)
             {
                 Sentence = Sentences[sentenceIndex];
@@ -143,8 +168,23 @@ namespace SentenceGame.Portable.ViewModel
                 SelTranslation = new ObservableCollection<string>();
                 Answer = "";
             }
+            else
+            {
+                await DialogService.ShowMessage("Gratulacje !!! Poprawnie ułożono wszystkie zdania.", "Gra skończona");
+                _navigationService.GoBack();
+            }
         }
 
         #endregion //Methods
+
+        #region Dialog Service
+        public IDialogService DialogService
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<IDialogService>();
+            }
+        }
+        #endregion
     }
 }

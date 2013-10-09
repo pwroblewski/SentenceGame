@@ -2,20 +2,13 @@
 using SentenceGame.Portable.Services;
 using SentenceGame.Win8.Service;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -24,7 +17,7 @@ namespace SentenceGame.Win8
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    sealed partial class App : IDialogService
     {
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,6 +38,7 @@ namespace SentenceGame.Win8
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             SimpleIoc.Default.Register<ISentenceService, SentenceService>();
+            SimpleIoc.Default.Register<IDialogService>(() => this);
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -90,6 +84,24 @@ namespace SentenceGame.Win8
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        public async Task ShowMessage(string message, string title)
+        {
+            var dialog = new MessageDialog(message, title ?? string.Empty);
+            await dialog.ShowAsync();
+        }
+
+        public async Task ShowWrongAnswerMessage(ObservableCollection<string> goodAnswer, string title)
+        {
+            string message = string.Empty;
+            foreach (var str in goodAnswer)
+            {
+                message = string.Format("{0}{1} ", message, str);
+            }
+
+            var dialog = new MessageDialog(message, title ?? string.Empty);
+            await dialog.ShowAsync();
         }
     }
 }
