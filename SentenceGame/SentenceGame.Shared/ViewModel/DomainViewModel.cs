@@ -72,7 +72,7 @@ namespace SentenceGame.Portable.ViewModel
                         lesson =>
                         {
                             _navigationService.Navigate("GamePage");
-                            Messenger.Default.Send<Lesson, GamePageViewModel>(lesson);
+                            Messenger.Default.Send<string, GamePageViewModel>(lesson.LessonPath);
                         }));
             }
         }
@@ -83,6 +83,7 @@ namespace SentenceGame.Portable.ViewModel
 
         private async Task LoadDomains()
         {
+			//this blocks UI thread and should be moved somewhere else to display "loading"
             Domains = ExtensionMethods.ToObservableCollection<Domain>(await _sentenceService.GetDomains());
         }
 

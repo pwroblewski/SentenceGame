@@ -10,7 +10,8 @@ namespace SentenceGame.Portable.Services
 {
     public interface ISentenceService
     {
-        Task<ObservableCollection<Domain>> GetDomains();
+        Task<IList<Domain>> GetDomains();
         Task<Domain> GetDomain(string title);
+        Task<IList<Sentence>> GetSentences(string lessonPath);
     }
 }

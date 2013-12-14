@@ -6,97 +6,113 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Windows.Storage;
 
 namespace SentenceGame.Win8.Service
 {
     public class SentenceService : ISentenceService
     {
-        private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
+        IList<Domain> domains = new List<Domain>();
 
-        public async Task<ObservableCollection<Domain>> GetDomains()
+        private const string XmlExt = ".xml";
+        private const string imgUri = "ms-appx:///Data/";
+
+        public async Task<IList<Domain>> GetDomains()
         {
-            ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>()
-            {
-                new Sentence
-                {
-                    Text = "Kot pije mleko",
-                    Translation = "The cat drinks milk"
-                },
-                new Sentence
-                {
-                    Text = "Pies bawi się piłką",
-                    Translation = "Dog plays with the ball"
-                },
-                new Sentence
-                {
-                    Text = "Gołąb lata po niebie",
-                    Translation = "Pigeon is flying on the sky "
-            }};
+            //IList<Domain> domains = new List<Domain>();
 
-            ObservableCollection<Lesson> lessons = new ObservableCollection<Lesson>()
+            try
             {
-                new Lesson
-                {
-                    Title = "Poziom podstawowy",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie podstawowym",
-                    Sentences = new ObservableCollection<Sentence>{
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 1",
-                            Translation = "This is sentence 1"
-                        },
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 2",
-                            Translation = "This is sentence 2"
-                        },
-                        new Sentence
-                        {
-                            Text = "To jest zdanie 3",
-                            Translation = "This is sentence 3"
-                        }
-                }}, 
-                new Lesson
-                {
-                    Title = "Poziom średniozaawansowany",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie średniozaawansowanym",
-                    Sentences = sentences
-                },
-                new Lesson
-                {
-                    Title = "Poziom zaawansowany",
-                    ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                    Description = "To jest lekcja na poziomie zaawansowanym",
-                    Sentences = sentences
-            }};
+                var sf = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Data");
 
-            Domain domZw = new Domain
+                IReadOnlyList<StorageFolder> sf2 = await sf.GetFoldersAsync();
+
+                foreach (StorageFolder folder in sf2)
+                {
+                    // czytanie lekcji
+                    IList<Lesson> lessonsList = new List<Lesson>();
+
+                    IReadOnlyList<StorageFile> allFiles = await folder.GetFilesAsync();
+                    var lessonsFiles = allFiles.Where(x => x.DisplayName.Contains("Lesson"));
+
+                    foreach (StorageFile file in lessonsFiles)
+                    {
+                        var xmlStream = await FileIO.ReadTextAsync(file);
+
+                        XDocument doc = XDocument.Parse(xmlStream);
+
+                        var data = (from query in doc.Descendants("Lesson")
+                                    select new Lesson
+                                    {
+                                        Title = (string)query.Element("Title"),
+                                        Description = (string)query.Element("Description"),
+                                        ImagePath = imgUri + (string)query.Element("ImagePath"),
+                                        LessonPath = folder.Name + "/" + file.Name
+                                    }).First<Lesson>();
+                        lessonsList.Add(data);
+                    }
+
+                    // czytanie pliku kategorii
+                    string fileName = folder.Name + XmlExt;
+
+                    StorageFile cat = await folder.GetFileAsync(fileName);
+
+                    var xmlStream2 = await FileIO.ReadTextAsync(cat);
+
+                    XDocument doc2 = XDocument.Parse(xmlStream2);
+
+                    var data2 = (from query in doc2.Descendants("Category")
+                                 select new Domain
+                                 {
+                                     Title = (string)query.Element("Title"),
+                                     Description = (string)query.Element("Description"),
+                                     ImagePath = imgUri + (string)query.Element("ImagePath"),
+                                     Lessons = lessonsList
+                                 }).First<Domain>();
+
+                    // czytanie
+
+                    domains.Add(data2);
+                }
+            }
+            catch (Exception ex)
             {
-                Title = "Zwierzęta",
-                ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "Lekcje do nauki układania zdań ze zwięrzętami",
-                Lessons = lessons
-            };
 
-            Domain domR = new Domain
-            {
-                Title = "Rośliny",
-                ImagePath = "ms-appx:///Images/Zwierzeta/Zwierzeta.jpg",
-                Description = "Lekcje do nauki układania zdań z roślinami",
-                Lessons = lessons
-            };
-
-            domains.Add(domZw);
-            domains.Add(domR);
+            }
 
             return await Task.FromResult(domains);
         }
 
         public async Task<Domain> GetDomain(string title)
         {
+            //IList<Domain> domains = await GetDomains();
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
+        }
+
+        public async Task<IList<Sentence>> GetSentences(string lessonPath)
+        {
+            string categoryFolder = lessonPath.Split('/')[0];
+            string lessonFile = lessonPath.Split('/')[1];
+
+            StorageFolder folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Data");
+            StorageFolder folder2 = await folder.GetFolderAsync(categoryFolder);
+            StorageFile file = await folder2.GetFileAsync(lessonFile);
+
+            var xmlStream = await FileIO.ReadTextAsync(file);
+
+            XDocument doc = XDocument.Parse(xmlStream);
+
+
+            var data = from query in doc.Descendants("Sentence")
+                       select new Sentence
+                       {
+                           Text = (string)query.Element("Text"),
+                           Translation = (string)query.Element("Translation"),
+                           ImagePath = ""
+                       };
+
+            return await Task.FromResult((IList<Sentence>)data.ToList());
         }
     }
 }

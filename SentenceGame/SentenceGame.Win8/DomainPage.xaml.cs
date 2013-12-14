@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SentenceGame.Win8.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,5 +49,10 @@ namespace SentenceGame.Win8
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			this.Frame.Navigate(typeof(GameSummary));
+		}
     }
 }

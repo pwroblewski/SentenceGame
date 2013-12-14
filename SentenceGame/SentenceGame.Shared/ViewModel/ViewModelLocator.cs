@@ -28,6 +28,7 @@ namespace SentenceGame.Portable.ViewModel
             SimpleIoc.Default.Register<DomainViewModel>();
             SimpleIoc.Default.Register<LessonsViewModel>();
             SimpleIoc.Default.Register<GamePageViewModel>();
+			SimpleIoc.Default.Register<SummaryPageViewModel>();
         }
 
         /// <summary>
@@ -59,6 +60,14 @@ namespace SentenceGame.Portable.ViewModel
                 return ServiceLocator.Current.GetInstance<GamePageViewModel>();
             }
         }
+
+		public SummaryPageViewModel SummaryPageViewModel
+		{
+			get
+			{
+				return ServiceLocator.Current.GetInstance<SummaryPageViewModel>();
+			}
+		}
 
         public ISentenceService DataService
         {

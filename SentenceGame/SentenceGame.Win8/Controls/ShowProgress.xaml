@@ -1,0 +1,35 @@
+﻿<UserControl
+	x:Name="Control"
+    x:Class="SentenceGame.Win8.ShowProgress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SentenceGame.Win8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Height="171" Width="Auto">
+
+	<Grid>
+		<Grid Opacity="0.3">
+			<Image Height="57" VerticalAlignment="Top" Width="594" Stretch="None" Source="ms-appx:///Assets/horizontalButtonLine.PNG" Margin="0,25,0,0" HorizontalAlignment="Right"/>
+			<Image Height="57" VerticalAlignment="Top" Width="594" Stretch="None" Source="ms-appx:///Assets/horizontalButtonLine.PNG" Margin="0,25,0,0" HorizontalAlignment="Left"/>
+		</Grid>
+		<ItemsControl x:Name="tStack" VerticalAlignment="Top" Height="50" Margin="0,0" ItemsSource="{Binding Sentences, ElementName=Control}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Image Stretch="None" Source="ms-appx:///Assets/verticalButtonLine.PNG" HorizontalAlignment="Left" Margin="{Binding TickMargin, ElementName=Control}" Height="30" Width="5"/>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+		<TextBlock Name="currentProgressIndicator" Margin="-15,0,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Assets/Rudiment_withPL.ttf#Rudiment" FontSize="48" RenderTransformOrigin="0.5,0.5">
+			<TextBlock.RenderTransform>
+				<CompositeTransform Rotation="-90" TranslateY="45"/>
+			</TextBlock.RenderTransform>
+			<Run Text="&gt;"/>
+		</TextBlock>
+	</Grid>
+</UserControl>

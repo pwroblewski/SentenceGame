@@ -40,12 +40,15 @@
     <Compile Include="Model\Lesson.cs" />
     <Compile Include="Model\Sentence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\ISentenceService.cs" />
     <Compile Include="ViewModel\DesignViewModel.cs" />
     <Compile Include="ViewModel\GamePageViewModel.cs" />
     <Compile Include="ViewModel\LessonsViewModel.cs" />
     <Compile Include="ViewModel\DomainViewModel.cs" />
+    <Compile Include="ViewModel\SummaryPageViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\Word.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">

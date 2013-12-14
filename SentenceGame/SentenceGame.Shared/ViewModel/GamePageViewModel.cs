@@ -9,6 +9,7 @@ using System.Linq;
 using SentenceGame.Portable.Helpers;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Practices.ServiceLocation;
 
 namespace SentenceGame.Portable.ViewModel
 {
@@ -30,12 +31,19 @@ namespace SentenceGame.Portable.ViewModel
             _sentenceService = sentenceService;
             _navigationService = navigationService;
 
-            Messenger.Default.Register<Lesson>(this, LoadData);
+            Messenger.Default.Register<string>(this, LoadData);
         }
 
         #endregion //Constructor
 
         #region Properties
+
+		public int SentenceIndex
+		{
+			get { return _sentenceIndex; }
+			set { _sentenceIndex = value; RaisePropertyChanged(() => SentenceIndex); }
+		}
+
 
         private ObservableCollection<Sentence> _sentences;
         public ObservableCollection<Sentence> Sentences
@@ -48,7 +56,7 @@ namespace SentenceGame.Portable.ViewModel
         public Sentence Sentence
         {
             get { return _sentence; }
-            set { _sentence = value; RaisePropertyChanged(() => Sentence); }
+			set { _sentence = value; RaisePropertyChanged(() => Sentence);  }
         }
 
         private string _answer;
@@ -58,15 +66,29 @@ namespace SentenceGame.Portable.ViewModel
             set { _answer = value; RaisePropertyChanged(() => Answer); }
         }
 
+		private bool _isCorrect;
+		public bool IsCorrect
+		{
+			get { return _isCorrect; }
+			set { _isCorrect = value; RaisePropertyChanged(() => IsCorrect); }
+		}
+
+		private bool _isIncorrect;
+		public bool IsIncorrect
+		{
+			get { return _isIncorrect; }
+			set { _isIncorrect = value; RaisePropertyChanged(() => IsIncorrect); }
+		}
+
         private ObservableCollection<string> _translation;
-        public ObservableCollection<string> Translation
+		public ObservableCollection<string> Translation
         {
             get { return _translation; }
             set { _translation = value; RaisePropertyChanged(() => Translation); }
         }
 
-        private ObservableCollection<string> _selTranslation;
-        public ObservableCollection<string> SelTranslation
+		private ObservableCollection<Word> _selTranslation;
+		public ObservableCollection<Word> SelTranslation
         {
             get { return _selTranslation; }
             set { _selTranslation = value; RaisePropertyChanged(() => SelTranslation); }
@@ -84,54 +106,104 @@ namespace SentenceGame.Portable.ViewModel
         #region Commands
 
         private RelayCommand<string> _selectCommand;
-        public RelayCommand<string> SelectCommand
+		public RelayCommand<string> SelectCommand
         {
             get
             {
                 return _selectCommand
-                    ?? (_selectCommand = new RelayCommand<string>(
-                        word =>
+					?? (_selectCommand = new RelayCommand<string>(
+						word =>
                         {
                             Translation.Remove(word);
-                            SelTranslation.Add(word.ToString());
-                            if (SelTranslation.SequenceEqual(GoodTranslation))
-                            {
-                                Answer = "Correct";
-                                _sentenceIndex++;
-                                NextSentence(_sentenceIndex);
-                            }
+							SelTranslation.Add(new Word() { Text = word });
+
+							if (Translation.Count == 0)
+							{
+								for (int i = 0; i < GoodTranslation.Count; i++)
+								{
+									if (GoodTranslation[i] != SelTranslation[i].Text)
+										SelTranslation[i].IsIncorrect = true;
+								}
+
+								bool translationFailed = SelTranslation.Any(w => w.IsIncorrect);
+
+								if (translationFailed)
+									IsIncorrect = true;
+								else
+									IsCorrect = true;
+							}
                         }));
             }
         }
 
-        private RelayCommand<string> _selectRevCommand;
-        public RelayCommand<string> SelectRevCommand
+        private RelayCommand<Word> _selectRevCommand;
+		public RelayCommand<Word> SelectRevCommand
         {
             get
             {
                 return _selectRevCommand
-                    ?? (_selectRevCommand = new RelayCommand<string>(
+					?? (_selectRevCommand = new RelayCommand<Word>(
                         word =>
                         {
+							if (IsCorrect || IsIncorrect)
+								return; // so that user doesn't mess up logic
+
                             SelTranslation.Remove(word);
-                            Translation.Add(word.ToString());
+							Translation.Add(word.Text);
                             Answer = "";
                         }));
             }
         }
 
+		private RelayCommand _nextCommand;
+		public RelayCommand NextCommand
+		{
+			get
+			{
+				return _nextCommand
+					?? (_nextCommand = new RelayCommand(
+						async () =>
+						{
+							IsCorrect = false;
+							IsIncorrect = false;
+
+							bool translationFailed = SelTranslation.Any(w => w.IsIncorrect);
+							await NextSentence(++SentenceIndex, !translationFailed);
+						}));
+			}
+		}
+
         #endregion //Commands
 
         #region Methods
 
-        private async void LoadData(Lesson lesson)
+        private async void LoadData(string lessonPath)
         {
-            Sentences = lesson.Sentences;
-            NextSentence(_sentenceIndex);
+			_isCorrect = false;
+			_isIncorrect = false;
+            var sentences = await _sentenceService.GetSentences(lessonPath);
+            Sentences = ExtensionMethods.ToObservableCollection<Sentence>(sentences);
+
+            SentenceIndex = 0;
+            await NextSentence(SentenceIndex, true);
         }
 
-        private async void NextSentence(int sentenceIndex)
+        private async Task NextSentence(int sentenceIndex, bool answer)
         {
+			if (sentenceIndex > 0)
+				Sentences[sentenceIndex - 1].IsCorrect = answer;
+
+            if (!answer)
+            {
+				var prev = Sentences[sentenceIndex - 1];
+				Sentences.Add(new Sentence()
+									{
+										ImagePath = prev.ImagePath,
+										Text = prev.Text,
+										Translation = prev.Translation
+									});
+            }
+
             if (Sentences.Count > sentenceIndex)
             {
                 Sentence = Sentences[sentenceIndex];
@@ -139,11 +211,26 @@ namespace SentenceGame.Portable.ViewModel
                 var list2 = list.OrderBy(a => Guid.NewGuid());
                 Translation = ExtensionMethods.ToObservableCollection<string>(list2);
                 GoodTranslation = ExtensionMethods.ToObservableCollection<string>(list);
-                SelTranslation = new ObservableCollection<string>();
+                SelTranslation = new ObservableCollection<Word>();
                 Answer = "";
+            }
+            else
+            {	  
+                await DialogService.ShowMessage("Gratulacje !!! Poprawnie ułożono wszystkie zdania.", "Gra skończona");
+                _navigationService.GoBack();
             }
         }
 
         #endregion //Methods
+
+        #region Dialog Service
+        public IDialogService DialogService
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<IDialogService>();
+            }
+        }
+        #endregion
     }
 }

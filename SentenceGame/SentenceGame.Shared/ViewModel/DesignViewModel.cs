@@ -54,7 +54,7 @@ namespace SentenceGame.Portable.ViewModel
         private async Task LoadData()
         {
             Domains = ExtensionMethods.ToObservableCollection<Domain>(await _sentenceService.GetDomains());
-            Lessons = Domains[0].Lessons;
+            //Lessons = Domains[0].Lessons;
         }
     }
 }

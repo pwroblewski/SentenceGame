@@ -36,6 +36,9 @@
         </Grid.RowDefinitions>
 
         <!-- Horizontal scrolling grid used in most view states -->
+        <Image Grid.RowSpan="2" Source="Assets/bg.jpg"/>
+
+        <!-- Horizontal scrolling grid used in most view states -->
         <GridView
             x:Name="itemGridView"
             AutomationProperties.AutomationId="ItemGridView"
@@ -52,9 +55,17 @@
             >
 
             <GridView.Header>
-                <StackPanel Width="480" Margin="0,4,14,0">
-                    <Image Source="{Binding ImagePath}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
-                    <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
+                <StackPanel Width="480" Margin="0,5,0,0">
+                    <Grid HorizontalAlignment="Left">
+                		<Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" HorizontalAlignment="Center" Margin="20" VerticalAlignment="Center" Width="350" Height="350"/>
+                		<Image HorizontalAlignment="Left" VerticalAlignment="Top" Source="Assets/verticalButtonLine.PNG" Stretch="None"/>
+                		<Image HorizontalAlignment="Right" VerticalAlignment="Top" Source="Assets/verticalButtonLine.PNG" Stretch="None" Margin="0,0,-4,0"/>
+                		<Image HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="Assets/horizontalButtonLine.PNG" Stretch="None" Margin="0,0,-4,0"/>
+                		<Image HorizontalAlignment="Right" VerticalAlignment="Top" Source="Assets/horizontalButtonLine.PNG" Stretch="None" Margin="0,0,-4,0"/>
+                		<Image HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="Assets/verticalButtonLine.PNG" Stretch="None" Height="125"/>
+                		<Image HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="Assets/verticalButtonLine.PNG" Stretch="None" Margin="0,0,-4,0" Height="125"/>
+                	</Grid>
+                    <TextBlock Text="{Binding Description}" Margin="0,15,18,0" Style="{StaticResource BodyTextStyle}" FontSize="29.333" FontFamily="{StaticResource ChalkFont}"/>
                 </StackPanel>
             </GridView.Header>
             <GridView.ItemContainerStyle>
@@ -93,8 +104,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false" />
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" Margin="36,0,36,45"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false" FontFamily="{StaticResource ChalkFont}" Foreground="#DED4D6A0" />
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

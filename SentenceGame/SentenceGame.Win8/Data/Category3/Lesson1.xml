@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Lesson>
+  <Title>Lesson 1</Title>
+  <Description>This is lesson-1 data</Description>
+  <ImagePath>Category3/Images/Lesson1.jpg</ImagePath>
+  <Sentences>
+    <Sentence>
+      <Text>To jest przykładowe zdanie nr 1 z lekcji 1</Text>
+      <Translation>This is sample sentense no. 1 from lesson-1</Translation>
+    </Sentence>
+    <Sentence>
+      <Text>To jest przykładowe zdanie nr 2 z lekcji 1</Text>
+      <Translation>This is sample sentense no. 2 from lesson-1</Translation>
+    </Sentence>
+    <Sentence>
+      <Text>To jest przykładowe zdanie nr 3 z lekcji 1</Text>
+      <Translation>This is sample sentense no. 3 from lesson-1</Translation>
+    </Sentence>
+  </Sentences>
+</Lesson>

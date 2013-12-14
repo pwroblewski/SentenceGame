@@ -11,9 +11,9 @@ namespace SentenceGame.Portable.Design
 {
     public class SentenceDesignService : ISentenceService
     {
-        private ObservableCollection<Domain> domains = new ObservableCollection<Domain>();
+        private IList<Domain> domains = new ObservableCollection<Domain>();
 
-        public async Task<ObservableCollection<Domain>> GetDomains()
+        public async Task<IList<Domain>> GetDomains()
         {
             ObservableCollection<Sentence> sentences = new ObservableCollection<Sentence>()
             {
@@ -80,6 +80,12 @@ namespace SentenceGame.Portable.Design
         {
             domains = await GetDomains();
             return await Task.FromResult(domains.Single(x => x.Title.Equals(title)));
+        }
+
+        public async Task<IList<Sentence>> GetSentences(string lessonPath)
+        {
+            Domain dom = await GetDomain("Zwierzęta");
+            return dom.Lessons[0].Sentences;
         }
     }
 }

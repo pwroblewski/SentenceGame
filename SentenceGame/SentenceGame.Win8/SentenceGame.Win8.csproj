@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>SentenceGame.Win8_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,6 +104,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ShowProgress.xaml.cs">
+      <DependentUpon>ShowProgress.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DomainPage.xaml.cs">
       <DependentUpon>DomainPage.xaml</DependentUpon>
     </Compile>
@@ -112,6 +116,10 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="GameSummary.xaml.cs">
+      <DependentUpon>GameSummary.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\BoolBeginStoryBoardTrigger.cs" />
     <Compile Include="Helpers\IocSetup.cs" />
     <Compile Include="Helpers\ItemClickCommand.cs" />
     <Compile Include="Helpers\NavigationService.cs" />
@@ -128,27 +136,113 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\backArrow.png" />
+    <Content Include="Assets\correct.PNG" />
+    <Content Include="Assets\horizontalButtonLine.PNG" />
+    <Content Include="Assets\incorrect.PNG" />
+    <Content Include="Assets\Rudiment_withPL.ttf" />
     <None Include="packages.config" />
     <None Include="SentenceGame.Win8_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\bg.jpg" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SplashScreen.png" />
+    <Content Include="Assets\SplashScreen.scale-180.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\verticalButtonLine.PNG" />
     <Content Include="Common\ReadMe.txt" />
-    <Content Include="Images\Zwierzeta\Zwierzeta.jpg" />
+    <Content Include="Data\Category1\Category1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Images\Category1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Images\Lesson1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Images\Lesson2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Images\Lesson3.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Lesson1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Lesson2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category1\Lesson3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Category2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Images\Category2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Images\Lesson1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Images\Lesson2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Images\Lesson3.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Lesson1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Lesson2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category2\Lesson3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Category3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Images\Category3.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Images\Lesson1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Images\Lesson2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Images\Lesson3.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Lesson1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Lesson2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Category3\Lesson3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ShowProgress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DomainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GameSummary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

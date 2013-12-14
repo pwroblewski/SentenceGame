@@ -12,6 +12,8 @@ namespace SentenceGame.Portable.Model
         public string ImagePath { get; set; }
         public string Translation { get; set; }
 
+		public bool? IsCorrect { get; set; }
+
         public Sentence()
         { }
     }
